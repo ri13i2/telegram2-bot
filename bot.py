@@ -6,7 +6,7 @@ from telegram.ext import (
 )
 
 # ✅ 관리자 ID (여러 명 지원)
-ADMIN_IDS = [8051010893, 8027469689]  # ← 실제 관리자 Telegram user_id 입력
+ADMIN_IDS = [8051010893, 8027469689, 7714652071]  # ← 실제 관리자 Telegram user_id 입력
 
 # ✅ 사용자 등록 코드
 AUTH_CODE = "888"
@@ -35,6 +35,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ✅ 일반 메시지 핸들러
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # 메시지와 텍스트가 있는지 안전하게 체크
+    if not update.message or not update.message.text:
+        return  # 텍스트 없는 메시지는 무시
+
     text = update.message.text.strip()
     user_id = update.effective_user.id
 
@@ -83,3 +87,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
