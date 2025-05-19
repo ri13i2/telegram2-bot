@@ -35,9 +35,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ✅ 일반 메시지 핸들러
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # 메시지와 텍스트가 있는지 안전하게 체크
-    if not update.message or not update.message.text:
-        return  # 텍스트 없는 메시지는 무시
+    # 메시지 및 텍스트 존재 여부 검사 (없으면 함수 종료)
+    if update.message is None or update.message.text is None:
+        return
 
     text = update.message.text.strip()
     user_id = update.effective_user.id
@@ -59,7 +59,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("❌ 이 기능은 관리자만 사용할 수 있습니다.")
         return
 
-    # 등록되지 않은 사용자 → 반응 없음
+    # 등록되지 않은 사용자 → 무반응
     if user_id not in registered_users and user_id not in ADMIN_IDS:
         return
 
@@ -76,7 +76,7 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
 
 # ✅ 메인 실행 함수
 def main():
-    bot_token = "7596584111:AAFR2XNBybeYmmVMz3dwlxmpje9uBCMJ4w4"  # ← BotFather에서 받은 토큰으로 대체
+    bot_token = "7596584111:AAFR2XNBybeYmmVMz3dwlxmpje9uBCMJ4w4"  # ← 실제 토큰으로 대체하세요
     app = ApplicationBuilder().token(bot_token).build()
 
     app.add_handler(CommandHandler("start", start))
