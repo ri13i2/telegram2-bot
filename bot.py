@@ -1,15 +1,16 @@
 import json
 import os
+import asyncio
 from telegram import Update
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 )
 
 # ✅ 관리자 ID (여러 명 지원)
-ADMIN_IDS = [8051010893, 8027469689, 7714652071]  # ← 실제 관리자 Telegram user_id 입력
+ADMIN_IDS = [7716926885, 7687544044, 7795800896]  # ← 실제 관리자 Telegram user_id 입력
 
 # ✅ 사용자 등록 코드
-AUTH_CODE = "888"
+AUTH_CODE = "777"
 
 # ✅ 사용자 저장 파일
 USER_FILE = "users.json"
@@ -51,9 +52,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # 관리자 공지
-    if text.startswith("##"):
+    if text.startswith("@@"):
         if user_id in ADMIN_IDS:
-            content = text.replace("##", "").strip()
+            content = text.replace("@@", "").strip()
             await broadcast_to_users(context, content)
         else:
             await update.message.reply_text("❌ 이 기능은 관리자만 사용할 수 있습니다.")
@@ -76,15 +77,19 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
 
 # ✅ 메인 실행 함수
 def main():
-    bot_token = "7596584111:AAFR2XNBybeYmmVMz3dwlxmpje9uBCMJ4w4"  # ← 실제 토큰으로 대체하세요
+    bot_token = "8039659594:AAGM94_MtM3B-XxD4Y3dqxVKTBb-VTv6B7E"  # ← 실제 토큰으로 대체하세요
     app = ApplicationBuilder().token(bot_token).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
-    print("✅ 봇 실행 중...")
-    app.run_polling()
+    async def run():
+        # ✅ Webhook 제거 (중복 충돌 방지)
+        await app.bot.delete_webhook()
+        print("✅ 봇 실행 중...")
+        await app.run_polling()
+
+    asyncio.run(run())
 
 if __name__ == "__main__":
     main()
-
