@@ -10,7 +10,7 @@ from telegram.ext import (
 ADMIN_IDS = [8051010893, 8027469689, 7714652071]  # ← 실제 관리자 Telegram user_id 입력
 
 # ✅ 사용자 등록 코드
-AUTH_CODE = "777"
+AUTH_CODE = "888"
 
 # ✅ 사용자 저장 파일
 USER_FILE = "users.json"
