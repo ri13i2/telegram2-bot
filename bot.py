@@ -1,6 +1,7 @@
 import json
 import os
 import asyncio
+import nest_asyncio
 from telegram import Update
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
@@ -75,17 +76,5 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
 # ✅ 비동기 메인 실행 함수
 async def main():
     bot_token = "8029823254:AAEEhAbrAZGlCOFJrJtKEhcKcTi8elvIRps"  # ← BotFather에서 받은 토큰
-    app = ApplicationBuilder().token(bot_token).build()
+    app = ApplicationBuilder().token
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
-
-    # ✅ 웹훅 비활성화 (중복 충돌 방지)
-    await app.bot.delete_webhook()
-
-    print("✅ 봇 실행 중...")
-    await app.run_polling()
-
-# ✅ 엔트리 포인트
-if __name__ == "__main__":
-    asyncio.run(main())
