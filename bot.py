@@ -1,14 +1,13 @@
 import json
 import os
 import asyncio
-import nest_asyncio
 from telegram import Update
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 )
 
-# ✅ 관리자 ID (여러 명 지원)
-ADMIN_IDS = [8051010893, 8027469689, 7714652071]  # 실제 관리자 Telegram user_id
+# ✅ 관리자 ID (3명)
+ADMIN_IDS = [8051010893, 8027469689, 7714652071]
 
 # ✅ 사용자 등록 코드
 AUTH_CODE = "888"
@@ -43,7 +42,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     user_id = update.effective_user.id
 
-    # 사용자 등록
+    # ✅ 사용자 등록
     if text == AUTH_CODE:
         if user_id not in registered_users:
             registered_users.add(user_id)
@@ -51,7 +50,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("✅ 사용자 등록완료")
         return
 
-    # 관리자 공지
+    # ✅ 관리자 메시지 브로드캐스트
     if text.startswith("##"):
         if user_id in ADMIN_IDS:
             content = text.replace("##", "").strip()
@@ -60,7 +59,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("❌ 이 기능은 관리자만 사용할 수 있습니다.")
         return
 
-    # 등록되지 않은 사용자 → 반응 없음
+    # ✅ 등록되지 않은 사용자는 무시
     if user_id not in registered_users and user_id not in ADMIN_IDS:
         return
 
@@ -73,8 +72,21 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
         except Exception as e:
             print(f"⚠️ 전송 실패 - 사용자 {user_id}: {e}")
 
-# ✅ 비동기 메인 실행 함수
+# ✅ 메인 실행 함수
 async def main():
-    bot_token = "8029823254:AAEEhAbrAZGlCOFJrJtKEhcKcTi8elvIRps"  # ← BotFather에서 받은 토큰
-    app = ApplicationBuilder().token
+    bot_token = "8039659594:AAGM94_MtM3B-XxD4Y3dqxVKTBb-VTv6B7E"  # 실제 토큰으로 대체하세요
+    app = ApplicationBuilder().token(bot_token).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
+
+    # ✅ Webhook 제거
+    await app.bot.delete_webhook()
+
+    print("✅ 봇 실행 중...")
+    await app.run_polling()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
 
