@@ -64,7 +64,7 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
 
 # 메인 실행
 def main():
-    TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"  # ← 실제 토큰으로 바꾸세요
+    TOKEN = "8029823254:AAEEhAbrAZGlCOFJrJtKEhcKcTi8elvIRps"  # ← 실제 토큰으로 바꾸세요
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
