@@ -56,7 +56,11 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
             print(f"⚠️ 전송 실패 - 사용자 {user_id}: {e}")
 
 if __name__ == "__main__":
-    TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+    TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")  # 환경변수로 토큰 설정 권장
+    if not TOKEN:
+        print("ERROR: TELEGRAM_BOT_TOKEN 환경변수가 설정되지 않았습니다.")
+        exit(1)
+
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
@@ -64,4 +68,5 @@ if __name__ == "__main__":
 
     print("✅ 로봇 실행 중...")
     app.run_polling()
+
 
