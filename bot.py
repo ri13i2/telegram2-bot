@@ -7,10 +7,10 @@ from telegram.ext import (
 )
 
 # ✅ 관리자 ID (여러 명 지원)
-ADMIN_IDS = [7716926885, 7687544044, 7795800896]  # ← 실제 관리자 Telegram user_id 입력
+ADMIN_IDS = [8051010893, 8027469689]  # 실제 관리자 Telegram user_id
 
 # ✅ 사용자 등록 코드
-AUTH_CODE = "777"
+AUTH_CODE = "888"
 
 # ✅ 사용자 저장 파일
 USER_FILE = "users.json"
@@ -36,7 +36,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ✅ 일반 메시지 핸들러
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # 메시지 및 텍스트 존재 여부 검사 (없으면 함수 종료)
     if update.message is None or update.message.text is None:
         return
 
@@ -52,19 +51,17 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # 관리자 공지
-    if text.startswith("@@"):
+    if text.startswith("##"):
         if user_id in ADMIN_IDS:
-            content = text.replace("@@", "").strip()
+            content = text.replace("##", "").strip()
             await broadcast_to_users(context, content)
         else:
             await update.message.reply_text("❌ 이 기능은 관리자만 사용할 수 있습니다.")
         return
 
-    # 등록되지 않은 사용자 → 무반응
+    # 등록되지 않은 사용자 → 반응 없음
     if user_id not in registered_users and user_id not in ADMIN_IDS:
         return
-
-    return
 
 # ✅ 브로드캐스트 함수
 async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
@@ -75,21 +72,20 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
         except Exception as e:
             print(f"⚠️ 전송 실패 - 사용자 {user_id}: {e}")
 
-# ✅ 메인 실행 함수
-def main():
-    bot_token = "8039659594:AAGM94_MtM3B-XxD4Y3dqxVKTBb-VTv6B7E"  # ← 실제 토큰으로 대체하세요
+# ✅ 비동기 메인 실행 함수
+async def main():
+    bot_token = "7596584111:AAFR2XNBybeYmmVMz3dwlxmpje9uBCMJ4w4"  # ← BotFather에서 받은 토큰
     app = ApplicationBuilder().token(bot_token).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
-    async def run():
-        # ✅ Webhook 제거 (중복 충돌 방지)
-        await app.bot.delete_webhook()
-        print("✅ 봇 실행 중...")
-        await app.run_polling()
+    # ✅ 웹훅 비활성화 (중복 충돌 방지)
+    await app.bot.delete_webhook()
 
-    asyncio.run(run())
+    print("✅ 봇 실행 중...")
+    await app.run_polling()
 
+# ✅ 엔트리 포인트
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
