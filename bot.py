@@ -74,7 +74,7 @@ async def broadcast_to_users(context: ContextTypes.DEFAULT_TYPE, message: str):
 
 # ✅ 비동기 메인 실행 함수
 async def main():
-    bot_token = "7596584111:AAFR2XNBybeYmmVMz3dwlxmpje9uBCMJ4w4"  # ← BotFather에서 받은 토큰
+    bot_token = "8029823254:AAEEhAbrAZGlCOFJrJtKEhcKcTi8elvIRps"  # ← BotFather에서 받은 토큰
     app = ApplicationBuilder().token(bot_token).build()
 
     app.add_handler(CommandHandler("start", start))
